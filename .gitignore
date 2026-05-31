@@ -1,0 +1,47 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Local build products
+*.aux
+*.log
+*.out
+*.toc
+
+# Local-only reference material and old exploratory artifacts
+Gosselin-Waterloo-FENNM - Copy.pdf
+archive/
+checkpoint_backups/
+
+# Checkpoints are ignored by default. The shared final run is allow-listed below.
+checkpoints/*
+!checkpoints/.gitkeep
+!checkpoints/runs/
+checkpoints/runs/*
+
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/
+checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/*
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/RUN_SUMMARY.md
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/run_metadata.json
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/history.csv
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/history.json
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/model_final.eqx
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/training_state_final.eqx
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/
+
+checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/*
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_a_report.md
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_a_summary.json
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_b_reference_report.md
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_b_reference_summary.json
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/
+
+checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/*
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/REPORT.md
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/summary.json
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/current_observations.csv
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/posterior_grid.csv
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/current_fit.png
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/posterior_contour.png
+!checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/marginals.png

@@ -1,0 +1,71 @@
+{
+  "status": "completed",
+  "latest_step": 500000,
+  "saved_at": "2026-05-27 15:55:09",
+  "jax_backend": "cpu",
+  "jax_devices": [
+    "TFRT_CPU_0"
+  ],
+  "pnp_config": {
+    "x_min": 0.0,
+    "x_max": 1.0,
+    "t_max": 0.2,
+    "dp_min": 0.5,
+    "dp_max": 2.0,
+    "dn_min": 0.5,
+    "dn_max": 2.0,
+    "zp": 1.0,
+    "zn": -1.0,
+    "epsilon": 1.0,
+    "cp_init": 1.0,
+    "cn_init": 1.0,
+    "v_left": -0.5,
+    "v_right": 0.5,
+    "width_size": 256,
+    "depth": 8,
+    "hard_ic": true,
+    "hard_phi_bc": true,
+    "normalize_inputs": true,
+    "boundary_layer_width": 0.05,
+    "dom_resid_weights": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "bl_resid_weights": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "bc_resid_weights": [
+      50.0,
+      50.0,
+      0.0
+    ]
+  },
+  "train_config": {
+    "seed": 0,
+    "max_steps": 500000,
+    "dom_batch_size": 512,
+    "bl_batch_size": 512,
+    "bc_batch_size": 512,
+    "learning_rate": 0.0005,
+    "lr_decay_rate": 0.95,
+    "lr_decay_steps": 2000,
+    "max_grad_norm": 10.0,
+    "print_every": 1000,
+    "use_ntk_weights": true,
+    "ntk_update_every": 500,
+    "checkpoint_every": 10000,
+    "checkpoint_path": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/model_latest.eqx"
+  },
+  "checkpoint_path": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/model_latest.eqx",
+  "model_latest": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/model_latest.eqx",
+  "model_final": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/model_final.eqx",
+  "model_interrupted": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/model_interrupted.eqx",
+  "training_state_latest": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/training_state_latest.eqx",
+  "training_state_final": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/training_state_final.eqx",
+  "training_state_interrupted": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/training_state_interrupted.eqx",
+  "history_json": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/history.json",
+  "history_csv": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/history.csv"
+}

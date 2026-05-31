@@ -1,0 +1,64 @@
+{
+  "run_dir": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537",
+  "checkpoint": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/model_final.eqx",
+  "output_dir": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe",
+  "reference_path": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/reference_solutions/reference_Dp1p25_Dn1p25_nx401_nt81.npz",
+  "reference_cached": true,
+  "reference_seconds": 0.0,
+  "reference_success": true,
+  "reference_message": "The solver successfully reached the end of the integration interval.",
+  "reference_nfev": 226,
+  "side": "left",
+  "reference_charge_quadrature_nx": 401,
+  "pinn_charge_quadrature_nx": 51,
+  "skip_initial_intervals": 1,
+  "n_observations": 79,
+  "sigma": 0.04188678868404949,
+  "relative_sigma": 0.02,
+  "current_scale": 2.0943394342024746,
+  "seed": 20260531,
+  "grid_size": 41,
+  "chunk_size": 128,
+  "posterior_seconds": 7.291969791986048,
+  "posterior_summary": {
+    "true": {
+      "Dp": 1.25,
+      "Dn": 1.25
+    },
+    "map": {
+      "Dp": 1.25,
+      "Dn": 1.2125
+    },
+    "mean": {
+      "Dp": 1.2353082612258919,
+      "Dn": 1.2367687683913946
+    },
+    "sd": {
+      "Dp": 0.09182883627495048,
+      "Dn": 0.09402878476979784
+    },
+    "credible_mass": 0.95,
+    "credible_interval": {
+      "Dp": {
+        "lower": 1.0625,
+        "upper": 1.4
+      },
+      "Dn": {
+        "lower": 1.0625,
+        "upper": 1.4375
+      }
+    },
+    "true_value_inside_joint_marginal_intervals": true,
+    "posterior_sum": 1.0000000000000002,
+    "max_posterior_mass": 0.10531829007796767
+  },
+  "files": {
+    "current_observations_csv": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/current_observations.csv",
+    "posterior_grid_csv": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/posterior_grid.csv",
+    "summary_json": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/summary.json",
+    "report_md": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/REPORT.md",
+    "posterior_contour_png": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/posterior_contour.png",
+    "marginals_png": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/marginals.png",
+    "current_fit_png": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/diagnostics/phase_c_current_probe/current_fit.png"
+  }
+}

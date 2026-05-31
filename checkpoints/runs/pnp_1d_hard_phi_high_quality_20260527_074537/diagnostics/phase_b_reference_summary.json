@@ -1,0 +1,310 @@
+{
+  "run_dir": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537",
+  "checkpoint": "/Users/zhengjia/Desktop/UWaterloo Master/T3/JAX/checkpoints/runs/pnp_1d_hard_phi_high_quality_20260527_074537/model_final.eqx",
+  "method": "BDF",
+  "rtol": 1e-06,
+  "atol": 1e-08,
+  "nt": 41,
+  "nx_values": [
+    101,
+    201,
+    401
+  ],
+  "cases": [
+    {
+      "Dp": 1.25,
+      "Dn": 1.25,
+      "reference_solves": [
+        {
+          "nx": 101,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 202,
+          "seconds": 0.02448683395050466
+        },
+        {
+          "nx": 201,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 214,
+          "seconds": 0.04411058302503079
+        },
+        {
+          "nx": 401,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 226,
+          "seconds": 0.15737316699232906
+        }
+      ],
+      "reference_grid_convergence": [
+        {
+          "cp_relative_l2": 0.0011568008098729525,
+          "cn_relative_l2": 0.0011568008098729935,
+          "phi_relative_l2": 0.00014869487200948548,
+          "cp_max_abs": 0.0033110212144857876,
+          "cn_max_abs": 0.003311021214488452,
+          "phi_max_abs": 7.450514154289101e-05,
+          "comparison": "nx101_vs_nx201"
+        },
+        {
+          "cp_relative_l2": 0.0005758667170593826,
+          "cn_relative_l2": 0.0005758667170597483,
+          "phi_relative_l2": 7.471911300677905e-05,
+          "cp_max_abs": 0.001663694076719846,
+          "cn_max_abs": 0.0016636940767280617,
+          "phi_max_abs": 3.722374122444583e-05,
+          "comparison": "nx201_vs_nx401"
+        }
+      ],
+      "pinn_vs_reference": {
+        "cp_relative_l2": 0.0008492535724436382,
+        "cn_relative_l2": 0.0005090154202633508,
+        "phi_relative_l2": 0.02499262927256346,
+        "cp_max_abs": 0.0023854977024668766,
+        "cn_max_abs": 0.001469940937363745,
+        "phi_max_abs": 0.06675281524658361,
+        "cp_min_pinn": 0.6053460836410522,
+        "cn_min_pinn": 0.6064897775650024,
+        "cp_min_reference": 0.6060428666877671,
+        "cn_min_reference": 0.6060428666877694
+      }
+    },
+    {
+      "Dp": 0.5,
+      "Dn": 0.5,
+      "reference_solves": [
+        {
+          "nx": 101,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 174,
+          "seconds": 0.017210082965902984
+        },
+        {
+          "nx": 201,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 186,
+          "seconds": 0.039789291098713875
+        },
+        {
+          "nx": 401,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 198,
+          "seconds": 0.13856883300468326
+        }
+      ],
+      "reference_grid_convergence": [
+        {
+          "cp_relative_l2": 0.001261710052268266,
+          "cn_relative_l2": 0.0012617100522684145,
+          "phi_relative_l2": 0.00015316538091845477,
+          "cp_max_abs": 0.003311947869111709,
+          "cn_max_abs": 0.0033119478691141513,
+          "phi_max_abs": 7.452638316202131e-05,
+          "comparison": "nx101_vs_nx201"
+        },
+        {
+          "cp_relative_l2": 0.0006300066227407226,
+          "cn_relative_l2": 0.0006300066227409997,
+          "phi_relative_l2": 7.731526100931601e-05,
+          "cp_max_abs": 0.0016637645745420926,
+          "cn_max_abs": 0.001663764574549198,
+          "phi_max_abs": 3.723884366607644e-05,
+          "comparison": "nx201_vs_nx401"
+        }
+      ],
+      "pinn_vs_reference": {
+        "cp_relative_l2": 0.0015747412446848654,
+        "cn_relative_l2": 0.0011860957438783886,
+        "phi_relative_l2": 0.016886364111919887,
+        "cp_max_abs": 0.005603796540238015,
+        "cn_max_abs": 0.004972282278150386,
+        "phi_max_abs": 0.04864449501037077,
+        "cp_min_pinn": 0.691608190536499,
+        "cn_min_pinn": 0.6932685375213623,
+        "cp_min_reference": 0.6924511817933491,
+        "cn_min_reference": 0.6924511817933542
+      }
+    },
+    {
+      "Dp": 2.0,
+      "Dn": 2.0,
+      "reference_solves": [
+        {
+          "nx": 101,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 218,
+          "seconds": 0.02001304109580815
+        },
+        {
+          "nx": 201,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 232,
+          "seconds": 0.04632345796562731
+        },
+        {
+          "nx": 401,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 242,
+          "seconds": 0.16127775004133582
+        }
+      ],
+      "reference_grid_convergence": [
+        {
+          "cp_relative_l2": 0.000983015215633104,
+          "cn_relative_l2": 0.0009830152156332745,
+          "phi_relative_l2": 0.00012510872812094737,
+          "cp_max_abs": 0.003311815230234494,
+          "cn_max_abs": 0.0033118152302367143,
+          "phi_max_abs": 7.443924348499165e-05,
+          "comparison": "nx101_vs_nx201"
+        },
+        {
+          "cp_relative_l2": 0.0004891031224712357,
+          "cn_relative_l2": 0.0004891031224714027,
+          "phi_relative_l2": 6.278273060227982e-05,
+          "cp_max_abs": 0.0016637645745420926,
+          "cn_max_abs": 0.001663764574549198,
+          "phi_max_abs": 3.720570335236095e-05,
+          "comparison": "nx201_vs_nx401"
+        }
+      ],
+      "pinn_vs_reference": {
+        "cp_relative_l2": 0.0008222910602388774,
+        "cn_relative_l2": 0.0006199464765461026,
+        "phi_relative_l2": 0.027963214476358147,
+        "cp_max_abs": 0.0025952857665267892,
+        "cn_max_abs": 0.0029041149372213138,
+        "phi_max_abs": 0.07332563042640844,
+        "cp_min_pinn": 0.5866662859916687,
+        "cn_min_pinn": 0.5894203186035156,
+        "cp_min_reference": 0.5880733884854058,
+        "cn_min_reference": 0.5880733884854064
+      }
+    },
+    {
+      "Dp": 0.5,
+      "Dn": 2.0,
+      "reference_solves": [
+        {
+          "nx": 101,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 208,
+          "seconds": 0.018984041991643608
+        },
+        {
+          "nx": 201,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 222,
+          "seconds": 0.04482704203110188
+        },
+        {
+          "nx": 401,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 232,
+          "seconds": 0.15447145805228502
+        }
+      ],
+      "reference_grid_convergence": [
+        {
+          "cp_relative_l2": 0.001270465920064128,
+          "cn_relative_l2": 0.0009796484423532554,
+          "phi_relative_l2": 0.00014838345717147326,
+          "cp_max_abs": 0.003301639646323906,
+          "cn_max_abs": 0.0032740813543061797,
+          "phi_max_abs": 8.027926550890907e-05,
+          "comparison": "nx101_vs_nx201"
+        },
+        {
+          "cp_relative_l2": 0.0006343029471198805,
+          "cn_relative_l2": 0.00048726739574090554,
+          "phi_relative_l2": 7.46027254720032e-05,
+          "cp_max_abs": 0.0016585930363215429,
+          "cn_max_abs": 0.0016451229592542305,
+          "phi_max_abs": 4.006888558699684e-05,
+          "comparison": "nx201_vs_nx401"
+        }
+      ],
+      "pinn_vs_reference": {
+        "cp_relative_l2": 0.0033037857017210884,
+        "cn_relative_l2": 0.0025798351121065098,
+        "phi_relative_l2": 0.02604139090058866,
+        "cp_max_abs": 0.007681788732592398,
+        "cn_max_abs": 0.005885398377747597,
+        "phi_max_abs": 0.06763777256012132,
+        "cp_min_pinn": 0.6893261671066284,
+        "cn_min_pinn": 0.5898160934448242,
+        "cp_min_reference": 0.6924465034696218,
+        "cn_min_reference": 0.5872226491334607
+      }
+    },
+    {
+      "Dp": 2.0,
+      "Dn": 0.5,
+      "reference_solves": [
+        {
+          "nx": 101,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 208,
+          "seconds": 0.018898083944804966
+        },
+        {
+          "nx": 201,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 222,
+          "seconds": 0.046599874971434474
+        },
+        {
+          "nx": 401,
+          "success": true,
+          "message": "The solver successfully reached the end of the integration interval.",
+          "nfev": 232,
+          "seconds": 0.15825679199770093
+        }
+      ],
+      "reference_grid_convergence": [
+        {
+          "cp_relative_l2": 0.000979648442353317,
+          "cn_relative_l2": 0.0012704659200643204,
+          "phi_relative_l2": 0.0001483834571697344,
+          "cp_max_abs": 0.0032740813543046254,
+          "cn_max_abs": 0.00330163964632213,
+          "phi_max_abs": 8.027926550741027e-05,
+          "comparison": "nx101_vs_nx201"
+        },
+        {
+          "cp_relative_l2": 0.0004872673957404203,
+          "cn_relative_l2": 0.0006343029471201104,
+          "phi_relative_l2": 7.460272546236499e-05,
+          "cp_max_abs": 0.0016451229592457928,
+          "cn_max_abs": 0.0016585930363341994,
+          "phi_max_abs": 4.006888557939181e-05,
+          "comparison": "nx201_vs_nx401"
+        }
+      ],
+      "pinn_vs_reference": {
+        "cp_relative_l2": 0.0005663833542357565,
+        "cn_relative_l2": 0.0010803658352743451,
+        "phi_relative_l2": 0.026753846675852778,
+        "cp_max_abs": 0.0026009721364448346,
+        "cn_max_abs": 0.0031817865607900453,
+        "phi_max_abs": 0.072389420270914,
+        "cp_min_pinn": 0.5873639583587646,
+        "cn_min_pinn": 0.6948337554931641,
+        "cp_min_reference": 0.5872226491334569,
+        "cn_min_reference": 0.692446503469625
+      }
+    }
+  ]
+}

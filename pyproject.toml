@@ -1,0 +1,17 @@
+[project]
+name = "pnp-pinn"
+version = "0.1.0"
+description = "Local JAX/Equinox PINN for a 1D Poisson-Nernst-Planck system"
+requires-python = ">=3.11"
+dependencies = [
+  "equinox",
+  "jax",
+  "jaxlib",
+  "matplotlib",
+  "numpy",
+  "optax",
+  "scipy",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
