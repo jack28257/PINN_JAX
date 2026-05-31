@@ -222,12 +222,59 @@ marginals.png
 ## Project Layout
 
 ```text
-src/pnp_pinn/          Reusable JAX/Equinox package
-scripts/               Current command-line training, diagnostics, and inference tools
-notebooks/             Lightweight local notebook entry point
-checkpoints/runs/      Shared subset of the main completed run
-docs/reports/          Current internal technical note
+.
+|-- README.md
+|-- PROJECT_STATUS.md
+|-- pyproject.toml
+|-- requirements.txt
+|-- src/
+|   `-- pnp_pinn/
+|       |-- model.py              PINN architecture and pointwise physics
+|       |-- train.py              Training and resume logic
+|       |-- losses.py             PDE, boundary, and NTK-weighted losses
+|       |-- reference_solver.py   Finite-difference/BDF benchmark solver
+|       |-- current_observable.py Current observable and posterior utilities
+|       |-- diagnostics.py        Phase A diagnostic checks
+|       |-- comparison.py         Phase B reference-comparison helpers
+|       `-- config.py             Physical and training configuration
+|-- scripts/
+|   |-- train_local.py            Fresh training run
+|   |-- resume_local.py           Resume a saved training state
+|   |-- diagnose_run.py           PINN-only diagnostics
+|   |-- compare_reference.py      Reference-solver comparison
+|   |-- visualize_run.py          Diagnostic figures
+|   |-- run_current_probe.py      Current-based inverse problem
+|   `-- benchmark_step_time.py    Local step-time benchmark
+|-- checkpoints/
+|   `-- runs/
+|       `-- pnp_1d_hard_phi_high_quality_20260527_074537/
+|           |-- RUN_SUMMARY.md
+|           |-- model_final.eqx
+|           |-- training_state_final.eqx
+|           |-- history.csv
+|           |-- run_metadata.json
+|           `-- diagnostics/
+|               |-- phase_a_report.md
+|               |-- phase_b_reference_report.md
+|               `-- phase_c_current_probe/
+|                   |-- REPORT.md
+|                   |-- summary.json
+|                   |-- current_observations.csv
+|                   |-- posterior_grid.csv
+|                   |-- current_fit.png
+|                   |-- posterior_contour.png
+|                   `-- marginals.png
+|-- docs/
+|   `-- reports/
+|       |-- pnp_pinn_project_technical_report.tex
+|       `-- pnp_pinn_project_technical_report.pdf
+`-- notebooks/
+    `-- pnp_local_training.ipynb
 ```
+
+Only the compact current-run artifact subset is tracked. Local archives,
+checkpoint backups, presentation material, and unrelated generated outputs are
+excluded by `.gitignore`.
 
 ## Main Python Entry Points
 
