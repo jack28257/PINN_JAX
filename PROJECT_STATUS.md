@@ -18,8 +18,8 @@ concentration initial condition and fixed wall voltages exactly by construction.
 
 ## Repository Scope
 
-This repository is a compact supervisor-facing snapshot. It tracks the source
-code, current documentation, the final model/state for the main run, and the
+This repository is a compact project snapshot. It tracks the source code,
+current documentation, the final model/state for the main run, and the
 diagnostics needed to understand the current-based inverse result. Local
 archives, presentation material, checkpoint backups, and unrelated generated
 artifacts are intentionally not tracked.
