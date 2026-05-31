@@ -24,6 +24,9 @@ diagnostics needed to understand the current-based inverse result. Local
 archives, presentation material, checkpoint backups, and unrelated generated
 artifacts are intentionally not tracked.
 
+For the shortest high-level progress update, start with
+[progress/LATEST_PROGRESS.md](progress/LATEST_PROGRESS.md).
+
 ## Current Inference Result
 
 Current-based inverse probe:

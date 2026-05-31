@@ -14,6 +14,9 @@ electric potential, and `Dp`, `Dn` are the unknown diffusion parameters. The
 main use case is amortized inverse inference: train the PINN once, then reuse it
 for many fast likelihood evaluations over diffusion-parameter space.
 
+For a short supervisor-facing update, see
+[progress/LATEST_PROGRESS.md](progress/LATEST_PROGRESS.md).
+
 ## Physical Model
 
 The active setup is a nondimensional binary-electrolyte PNP benchmark on
@@ -225,6 +228,8 @@ marginals.png
 .
 |-- README.md
 |-- PROJECT_STATUS.md
+|-- progress/
+|   `-- LATEST_PROGRESS.md      Short supervisor-facing progress update
 |-- pyproject.toml
 |-- requirements.txt
 |-- src/
