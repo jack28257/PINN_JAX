@@ -33,8 +33,8 @@ The most important conceptual sentence:
 | 4 | What the PINN learns | 1:10 |
 | 5 | PINN training objective | 1:00 |
 | 6 | Why amortization matters | 0:50 |
-| 7 | Current observable and Q(t) | 1:05 |
-| 8 | Synthetic data generation | 0:55 |
+| 7 | Synthetic data generation | 0:55 |
+| 8 | Current observable and Q(t) | 1:05 |
 | 9 | Likelihood and posterior | 1:10 |
 | 10 | Current fit | 1:05 |
 | 11 | Posterior result | 1:20 |
@@ -186,12 +186,36 @@ times.
 
 Transition:
 
-Now we need to define exactly what current means in this blocking-electrode
-setup.
+Now I will show how the current observations are generated.
 
-## Slide 7 - Current Observable and Q(t)
+## Slide 7 - Synthetic Data Generation
 
-Timing: 5:45 to 6:50
+Timing: 5:45 to 6:40
+
+Script:
+
+The synthetic data are generated independently of the PINN.
+
+The true parameter pair is `Dp = 1.25`, `Dn = 1.25`. An independent
+finite-difference reference solver with BDF time integration generates the PNP
+solution. From that reference solution, we compute the clean electrode current.
+Then we add 2% Gaussian noise.
+
+After skipping the first transient interval, the inverse problem uses 79 current
+observations.
+
+This separation is important: the data source is the independent benchmark
+solver, while the model being tested in the inverse problem is the trained PINN
+surrogate.
+
+Transition:
+
+Before forming the likelihood, I need to clarify exactly what current means in
+this blocking-electrode setup.
+
+## Slide 8 - Current Observable and Q(t)
+
+Timing: 6:40 to 7:45
 
 Script:
 
@@ -212,32 +236,8 @@ the current is not boundary ionic flux.
 
 Transition:
 
-With the observable defined, I can describe the synthetic experiment.
-
-## Slide 8 - Synthetic Data Generation
-
-Timing: 6:50 to 7:45
-
-Script:
-
-The synthetic data are generated independently of the PINN.
-
-The true parameter pair is `Dp = 1.25`, `Dn = 1.25`. An independent
-finite-difference reference solver with BDF time integration generates the PNP
-solution. From that reference solution, we compute the clean electrode current.
-Then we add 2% Gaussian noise.
-
-After skipping the first transient interval, the inverse problem uses 79 current
-observations.
-
-This separation is important: the data source is the independent benchmark
-solver, while the model being tested in the inverse problem is the trained PINN
-surrogate.
-
-Transition:
-
-The next slide shows the likelihood model used to turn those observations into a
-posterior.
+The next slide shows the likelihood model used to turn those current
+observations into a posterior.
 
 ## Slide 9 - Likelihood and Posterior
 
