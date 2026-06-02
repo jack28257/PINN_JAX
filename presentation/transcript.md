@@ -2,395 +2,365 @@
 
 Deck: `pnp_pinn_current_inference_presentation.pptx`
 
+Format: academic presentation
+
 Target slot: 15 minutes
 
 Prepared talk length: approximately 13 minutes
 
-## Core Message
+## Main Story
 
-A trained parameterized PINN can be reused as a fast forward surrogate inside a
-measurable inverse problem: given noisy electrode-current observations, we infer
-a posterior distribution over the diffusion parameters `Dp` and `Dn`.
+This project studies a controlled inverse problem for a one-dimensional
+Poisson-Nernst-Planck system. The unknowns are the diffusion parameters `Dp` and
+`Dn`. The observation is electrode current, not the hidden concentration or
+potential fields. A PINN is trained as a parameterized forward surrogate, and the
+trained surrogate is then reused to evaluate a current-based likelihood and form
+a posterior distribution over `Dp` and `Dn`.
 
-Important wording discipline:
+The most important conceptual sentence:
 
-- Say that the real observable is current `I(t)`.
-- Say that `Q(t)` is a simulation-side construction used to compute the same
-  charging-current signal from the benchmark/PINN state.
-- Do not imply that `Q(t)` is what would be directly measured in the lab.
-- Do not present the current result as a final experimental model. Present it as
-  a controlled proof of concept with explicit assumptions.
+> The PINN is not directly estimating `Dp` and `Dn`; it learns the forward PNP
+> solution map for many possible `Dp`, `Dn` values, and the inverse problem uses
+> that map to compare predicted current with observed current.
 
 ## Timing Plan
 
 | Slide | Topic | Target time |
 | --- | --- | ---: |
-| 1 | Core thesis | 0:50 |
-| 2 | Motivation: measurable current | 1:10 |
-| 3 | PNP benchmark and assumptions | 1:20 |
-| 4 | Trained PINN surrogate | 1:15 |
-| 5 | Synthetic current data generation | 1:10 |
-| 6 | Observable definition: current vs Q(t) | 1:15 |
-| 7 | Inverse problem and likelihood | 1:25 |
-| 8 | Current fit at MAP | 1:20 |
-| 9 | Posterior result | 1:40 |
-| 10 | Why non-trivial and next steps | 1:35 |
+| 1 | Thesis and workflow | 0:45 |
+| 2 | What is observed | 0:55 |
+| 3 | Forward PNP model | 1:05 |
+| 4 | What the PINN learns | 1:10 |
+| 5 | PINN training objective | 1:00 |
+| 6 | Why amortization matters | 0:50 |
+| 7 | Current observable and Q(t) | 1:05 |
+| 8 | Synthetic data generation | 0:55 |
+| 9 | Likelihood and posterior | 1:10 |
+| 10 | Current fit | 1:05 |
+| 11 | Posterior result | 1:20 |
+| 12 | Interpretation and next steps | 1:20 |
 
 Total prepared talk: about 13 minutes.
 
-## Slide 1 - Core Thesis
+## Slide 1 - Thesis and Workflow
 
-Timing: 0:00 to 0:50
+Timing: 0:00 to 0:45
 
 Script:
 
-The main message of this presentation is that the project has moved beyond only
-training a PINN. The current goal is to use a trained PINN as a reusable forward
-model inside an inverse problem.
+This talk is about current-based inverse inference for a one-dimensional
+Poisson-Nernst-Planck system.
 
-In this setup, the unknown parameters are the positive- and negative-ion
-diffusion parameters, `Dp` and `Dn`. The observation is not a hidden
-concentration field. The observation is an electrode-level current signal. I
-generate synthetic noisy current observations from an independent PNP benchmark
-solver, then ask whether the trained PINN can recover a posterior distribution
-over `Dp` and `Dn`.
+The goal is to infer the diffusion parameters `Dp` and `Dn` from electrode
+current observations. The central idea is to first train a physics-informed
+neural network as a parameterized forward surrogate. Once trained, this PINN can
+be queried at many candidate parameter pairs. Those forward predictions are then
+used inside a Bayesian inverse problem.
 
-The headline result is that, in this controlled test case, the posterior covers
-the true parameter values. The inverse problem used 79 noisy current
-observations and a 41 by 41 posterior grid.
+So the workflow is: PNP physics gives the forward model, the PINN approximates
+the parameterized forward solution, and the inverse problem produces a posterior
+distribution over `Dp` and `Dn`.
 
 Transition:
 
-First I will explain why current is the right observable for this inverse
-problem.
+I will start with the observation model, because that determines what inverse
+problem we are actually solving.
 
-## Slide 2 - Motivation
+## Slide 2 - What Is Observed
 
-Timing: 0:50 to 2:00
+Timing: 0:45 to 1:40
 
 Script:
 
-The motivation is that a realistic inverse problem should start from what an
-experiment can actually measure.
+The inverse problem should be formulated in terms of a quantity that could be
+measured.
 
-During training and validation, it is useful to look at the full fields:
-`cp(x,t)`, `cn(x,t)`, and `phi(x,t)`. Those fields are useful for checking
-whether the PINN has learned the PNP dynamics. But they are not the observation
-model I want to rely on for inference, because they would be hard to observe
-directly throughout the full space-time domain in a real experiment.
+During model development, it is useful to inspect the full fields:
+`cp(x,t)`, `cn(x,t)`, and `phi(x,t)`. But those fields are not the observation
+model used for inference here. The inverse problem uses electrode current
+`I(t)`.
 
-So the inverse problem is framed around current `I(t)`. Current is an
-electrode-level signal. It is not a local concentration probe, and it does not
-require reconstructing the full concentration field. It is also a standard
-electrical measurement in electrochemical systems.
-
-In this project the current data are synthetic, but the important point is that
-the synthetic observable is chosen to match something that could be measured in
-principle.
+Mathematically, the data are current observations, and the output is a posterior
+distribution `p(Dp, Dn | I_obs)`. This distinction matters because the PINN
+outputs fields, but the likelihood is built from current.
 
 Transition:
 
-Now I will define the controlled PNP benchmark that produces the synthetic
-current data.
+Next I will define the forward PNP system that generates these fields.
 
-## Slide 3 - PNP Benchmark and Assumptions
+## Slide 3 - Forward PNP Model
 
-Timing: 2:00 to 3:20
+Timing: 1:40 to 2:45
 
 Script:
 
-The forward model is a nondimensional one-dimensional Poisson-Nernst-Planck
-system for a binary electrolyte. The unknown diffusion parameters are `Dp` and
-`Dn`, and the model outputs the positive-ion concentration, the negative-ion
-concentration, and the electric potential.
+The benchmark is a nondimensional one-dimensional Poisson-Nernst-Planck system.
+There are two ionic concentrations, `cp` and `cn`, and an electric potential
+`phi`.
 
-The fluxes include both diffusion and electrostatic drift. The concentration
-equations are conservation laws, and the potential is determined by the Poisson
-equation.
+The fluxes contain diffusion and drift terms. The concentration equations are
+conservation laws, and the potential satisfies the Poisson equation. The
+parameter values to infer are the two diffusion coefficients `Dp` and `Dn`.
 
-The active benchmark uses `x` in `[0,1]`, `t` in `[0,0.2]`, and parameter values
-`Dp`, `Dn` in `[0.5,2.0]`. The true synthetic case shown later is
-`Dp = 1.25`, `Dn = 1.25`. The wall voltages are fixed at `phi(0) = -0.5` and
-`phi(1) = 0.5`.
+The active setup uses `x` in `[0,1]`, `t` in `[0,0.2]`, and `Dp`, `Dn` in
+`[0.5,2.0]`. The wall potentials are fixed, and the ion fluxes at the walls are
+zero.
 
-A key assumption is the blocking-electrode boundary condition: `Jp = 0` and
-`Jn = 0` at the walls. This does not mean there is no measured current. It means
-ions do not cross the electrode. The current in this setup is charging current
-associated with the electrode and electric field, not ionic flux through the
-boundary.
+The no-flux condition is a blocking-electrode assumption. It means ions do not
+cross the electrode. It does not mean the measured current is zero, because the
+current here is charging current associated with the electrode and electric
+field.
 
 Transition:
 
-With that benchmark fixed, the next step is the trained PINN surrogate.
+With the forward model fixed, the next question is what the PINN actually
+learns.
 
-## Slide 4 - Trained PINN Surrogate
+## Slide 4 - What the PINN Learns
 
-Timing: 3:20 to 4:35
+Timing: 2:45 to 3:55
 
 Script:
 
-The PINN is parameterized by both space-time and diffusion parameters. Its input
-is `(x, t, Dp, Dn)`, and its output is `(cp, cn, phi)`.
+This is the most important slide for understanding the role of the PINN.
 
-The implementation is in JAX and Equinox. The current trained run uses an
-8-layer tanh MLP with width 256, trained for 500,000 Adam steps on the CPU
-backend.
+The PINN is not trained to directly output `Dp` and `Dn`. Instead, it learns a
+parameterized forward solution map. Its input is `(x, t, Dp, Dn)`, and its output
+is `(cp, cn, phi)`.
 
-Two important constraints are enforced structurally. First, the concentration
-initial conditions are exact by construction. Second, the fixed wall voltages
-for `phi` are exact by construction. This matters because it removes two
-important sources of boundary-condition error from the neural network output.
+This means one trained neural network represents a family of PNP solutions over
+the parameter domain. If we give the network a candidate pair of diffusion
+parameters, it returns the predicted concentration and potential fields at the
+requested space-time point.
 
-The diagnostics show that the trained surrogate is not perfect, especially for
-the potential field, but it is accurate enough to support the controlled
-current-based inverse test. The important amortization idea is that the expensive
-training happens once, and then the same trained surrogate can be reused for many
-candidate `Dp`, `Dn` values.
+The inverse problem then uses those predicted fields to compute the predicted
+current for that candidate parameter pair. That is how the PINN enters the
+posterior calculation.
 
 Transition:
 
-Next I will explain how the current observations are generated.
+Now I will explain how this forward surrogate is trained.
 
-## Slide 5 - Synthetic Data Generation
+## Slide 5 - PINN Training Objective
 
-Timing: 4:35 to 5:45
+Timing: 3:55 to 4:55
 
 Script:
 
-The current observations are deliberately generated from an independent
-benchmark solver, not from the PINN. This is important because it keeps the
-inverse test honest. The PINN is being evaluated against data from a separate
-numerical model.
+The PINN is trained by enforcing the physics of the PNP system, rather than by
+supervised fitting to reference solution labels.
 
-The true parameters are set to `Dp = 1.25` and `Dn = 1.25`. The reference solver
-then computes the PNP solution. From that simulated PNP state, I compute a clean
-charging-current signal. After that, I add independent Gaussian noise with 2%
-relative standard deviation.
+The loss contains the PDE residuals, the initial and boundary residuals, and
+sampling over the parameter domain. In the current completed run, the model was
+trained for 500,000 Adam steps.
 
-The final observation used by the inverse problem is therefore a noisy
-electrode-current time series. The current diagnostic uses 79 time intervals
-after skipping the first transient interval.
+Two constraints are especially important. The initial concentrations and the
+wall voltages are built into the network output, so those conditions are
+enforced structurally.
 
-The key point is that the training target and the inverse observation are not the
-same thing. The PINN produces fields, but the likelihood is built from current.
+Reference solutions are still important, but their role is different: they are
+used for validation and for generating synthetic data, not as direct training
+labels for the PINN.
 
 Transition:
 
-There is one subtle point here: how the current is computed in the synthetic
-benchmark.
+This leads to the computational reason for using a PINN.
 
-## Slide 6 - Observable Definition
+## Slide 6 - Why Amortization Matters
 
-Timing: 5:45 to 7:00
+Timing: 4:55 to 5:45
 
 Script:
 
-This slide is mainly to prevent a possible misunderstanding.
+The claim is not that training a PINN is faster than one benchmark solve.
+Training is expensive.
 
-In a real experiment, the instrument measures current `I(t)` directly through
-the external circuit. We do not need to measure a concentration field, and we do
-not need to measure electrode charge `Q(t)` directly.
+The computational argument is amortization. If we solve the inverse problem
+directly with the benchmark model, then each candidate `Dp`, `Dn` pair requires
+a forward numerical solve. A grid posterior or an MCMC chain may require many
+such evaluations.
 
-In the synthetic benchmark, however, the simulator gives us the PNP state. From
-that state we construct `Q_L(t)` using a Gauss-law-based expression, and then
-compute an interval-averaged current from finite differences of `Q_L(t)`.
-
-So `Q(t)` is not the measured data. It is the simulation-side route used to
-construct the same type of charging-current observable.
-
-This also explains why we do not use boundary ionic flux as the current. The
-boundary is blocking, so `Jp = Jn = 0` at the wall. The current signal here is an
-electrode charging current, not ions entering or leaving the domain.
-
-The reason for using the `Q(t)` construction in the synthetic/PINN pipeline is
-practical: it avoids relying on unstable boundary derivatives while preserving
-the electrode-level current meaning.
+After the PINN has been trained, the forward model is a neural-network
+evaluation. The benefit appears when the same trained model is reused many
+times.
 
 Transition:
 
-Now that the observation is defined, I can describe the inverse problem.
+Now we need to define exactly what current means in this blocking-electrode
+setup.
 
-## Slide 7 - Inverse Problem and Likelihood
+## Slide 7 - Current Observable and Q(t)
 
-Timing: 7:00 to 8:25
+Timing: 5:45 to 6:50
 
 Script:
 
-The inverse problem asks: given observed current data, what can we infer about
-`Dp` and `Dn`?
+In a real experiment, the observable would be current `I(t)` measured through an
+external circuit.
 
-For the current diagnostic, I use a simple and transparent grid posterior. The
-candidate grid contains 41 by 41 parameter pairs over the parameter box. For
-each candidate pair, the trained PINN predicts the current signal. That
-prediction is compared to the noisy observed current.
+In the synthetic benchmark, the simulator gives us the PNP state. From that
+state, we construct the electrode charge response `Q_L(t)` and take finite
+differences to obtain interval-averaged current.
 
-The likelihood assumes independent Gaussian measurement errors. In other words,
-for each observed time interval, the difference between the observed current and
-the PINN-predicted current is modeled as a Gaussian error term. The standard
-deviation is set to 2% of the current scale in this diagnostic.
+The important point is that `Q(t)` is not being presented as the measured lab
+quantity. It is the simulation-side construction used to compute the same
+current observable from the PNP state.
 
-The posterior is proportional to likelihood times prior. Here the prior over the
-grid is uniform, so the posterior shape mainly comes from the current mismatch.
-After evaluating all grid points, the probabilities are normalized.
-
-This is intentionally simple. The grid posterior is easy to inspect and explain
-for the presentation. Later it can be replaced by MCMC or another sampling
-method if the parameter space becomes larger.
+This is useful because it avoids unstable boundary derivatives when evaluating
+current from the PINN state. It also respects the blocking boundary condition:
+the current is not boundary ionic flux.
 
 Transition:
 
-The first check is whether the MAP point actually matches the observed current.
+With the observable defined, I can describe the synthetic experiment.
 
-## Slide 8 - Current Fit at MAP
+## Slide 8 - Synthetic Data Generation
 
-Timing: 8:25 to 9:45
+Timing: 6:50 to 7:45
 
 Script:
 
-This slide compares three current traces: the clean benchmark current, the noisy
-synthetic observations, and the PINN-predicted current at the MAP parameter
-point.
+The synthetic data are generated independently of the PINN.
 
-The important thing to notice is that the PINN prediction follows the observed
-current at the level of the measurement noise. This is the direct evidence that
-the inverse problem is fitting the actual likelihood signal, not hidden
-concentration fields.
+The true parameter pair is `Dp = 1.25`, `Dn = 1.25`. An independent
+finite-difference reference solver with BDF time integration generates the PNP
+solution. From that reference solution, we compute the clean electrode current.
+Then we add 2% Gaussian noise.
 
-There are 79 current observations. The assumed relative Gaussian noise level is
-2%. Evaluating the 41 by 41 posterior grid took about 7.3 seconds for this
-diagnostic.
+After skipping the first transient interval, the inverse problem uses 79 current
+observations.
 
-The MAP point is the parameter pair with the highest posterior probability. In
-this run, the MAP is `Dp = 1.25`, `Dn = 1.2125`. The true value is
-`Dp = 1.25`, `Dn = 1.25`, so the MAP is close but not exactly equal to the true
-pair. That is acceptable because the data are noisy and the surrogate is not
-perfect.
+This separation is important: the data source is the independent benchmark
+solver, while the model being tested in the inverse problem is the trained PINN
+surrogate.
 
 Transition:
 
-The more important result is the full posterior, not just the MAP point.
+The next slide shows the likelihood model used to turn those observations into a
+posterior.
 
-## Slide 9 - Posterior Result
+## Slide 9 - Likelihood and Posterior
 
-Timing: 9:45 to 11:25
+Timing: 7:45 to 8:55
 
 Script:
 
-This is the main inference result.
+For each candidate pair `Dp`, `Dn`, the PINN predicts a current time series. We
+compare that prediction to the observed current.
 
-The posterior is concentrated near the true parameter pair, but it is not a
-single point. It has a tilted shape, which indicates coupled uncertainty between
-`Dp` and `Dn`. This is important because current is a compressed observation:
-different combinations of `Dp` and `Dn` can produce similar current responses.
+The noise model is independent Gaussian noise. The residual `r_k` is the
+difference between the PINN-predicted current and the observed current,
+normalized by the noise standard deviation.
 
-The true parameters are `Dp = 1.25`, `Dn = 1.25`. The MAP is `Dp = 1.25`,
-`Dn = 1.2125`. The posterior mean is `Dp = 1.23531`, `Dn = 1.23677`.
+The likelihood is therefore proportional to `exp(-0.5 sum r_k^2)`. In this
+diagnostic, the prior is uniform over a 41 by 41 parameter grid, so the
+posterior is obtained by evaluating and normalizing this likelihood over the
+grid.
 
-The 95% marginal interval for `Dp` is `[1.0625, 1.4]`. The 95% marginal interval
-for `Dn` is `[1.0625, 1.4375]`. Both intervals cover the true value.
-
-So the correct interpretation is not: the inverse problem has exactly recovered
-the true parameters. The correct interpretation is: the current-based inverse
-pipeline produces a posterior region that contains the true parameters and makes
-the remaining uncertainty visible.
-
-That is the result I would present as usable evidence at this stage: a coherent
-proof of concept, not a final calibrated experimental inference system.
+The output is a distribution over `Dp` and `Dn`, not just a single fitted
+parameter pair.
 
 Transition:
 
-I will finish by explaining why this is non-trivial and what should come next.
+The first result is the current fit at the MAP point.
 
-## Slide 10 - Why Non-Trivial and Next Steps
+## Slide 10 - Current Fit
 
-Timing: 11:25 to 13:00
+Timing: 8:55 to 10:00
 
 Script:
 
-This problem is non-trivial for several reasons.
+This plot compares three curves: the reference clean current, the noisy current
+observations, and the PINN-predicted current at the MAP parameter pair.
 
-First, we do not observe the full PNP state. We observe only electrode current.
-Second, current is a compressed signal, so it does not uniquely reveal every
-detail of the internal concentration and potential fields. Third, `Dp` and `Dn`
-can be statistically correlated in the posterior because they both affect the
-same current response. Fourth, the forward model is a coupled PDE system, so
-each likelihood evaluation is expensive if we use the benchmark solver directly.
-Finally, the output should include uncertainty, not just one best-fit parameter
-pair.
+The MAP estimate is `Dp = 1.25`, `Dn = 1.2125`. The PINN current at this point
+matches the observed current at approximately the noise level.
 
-The PINN helps because it amortizes the forward model. Training is expensive,
-but once trained, the surrogate can be reused for many likelihood evaluations.
-That is where the computational advantage becomes meaningful.
+This is an important check because the inverse problem is not being evaluated on
+hidden concentration fields. It is being evaluated on the same current signal
+that appears in the likelihood.
 
-The immediate next steps are to repeat the current-based inverse experiment
-across more true parameter pairs, test sensitivity to noise level and time
-sampling, and move from the simple grid posterior to MCMC if needed. Later, the
-model can include richer electrode-interface physics.
+Transition:
 
-The bottom line is that the current pipeline is coherent enough to present: the
-assumptions are explicit, the observable is measurable, the reference data are
-generated independently, and the posterior result answers the inverse question
-with uncertainty.
+The current fit is useful, but the posterior is the main result.
 
-## Q&A Prep
+## Slide 11 - Posterior Result
+
+Timing: 10:00 to 11:20
+
+Script:
+
+The posterior is concentrated near the true parameter values. The true pair is
+`Dp = 1.25`, `Dn = 1.25`, and the posterior mean is approximately
+`Dp = 1.2353`, `Dn = 1.2368`.
+
+The 95% marginal interval for `Dp` is `[1.0625, 1.4000]`, and for `Dn` it is
+`[1.0625, 1.4375]`. Both intervals include the true values.
+
+The shape of the posterior is also informative. It is not a circular independent
+uncertainty region. It is tilted, which means the current signal couples the two
+diffusion parameters. Several nearby combinations of `Dp` and `Dn` can explain
+the current almost equally well.
+
+So the result should be interpreted as a posterior uncertainty region, not as an
+exact deterministic recovery.
+
+Transition:
+
+I will close with what this result shows and what still needs to be tested.
+
+## Slide 12 - Interpretation and Next Steps
+
+Timing: 11:20 to 12:40
+
+Script:
+
+The current result is a controlled proof of concept for PINN-based inverse
+inference.
+
+It shows three things. First, the observation model is current-based and
+experimentally meaningful. Second, the PINN is used as a reusable forward
+surrogate, not as the source of the synthetic data. Third, the inference result
+is a posterior distribution over `Dp` and `Dn`, so the uncertainty is visible.
+
+The next steps are to repeat the experiment across more true parameter pairs,
+test sensitivity to the noise level and time sampling, and eventually replace
+the grid posterior with MCMC if the parameter space becomes larger.
+
+The main conclusion is that the pipeline is now coherent: measurable current
+data, an independent reference data source, a trained PINN forward surrogate,
+and a posterior answer to the inverse problem.
+
+## Short Q&A Prep
+
+### What is the PINN doing?
+
+It approximates the parameterized forward PNP solution map:
+`(x,t,Dp,Dn) -> (cp,cn,phi)`. It does not directly output the inferred
+parameters.
 
 ### What is the reference solver?
 
-The reference solver is independent of the PINN. It uses a finite-difference
-method-of-lines discretization, solves the Poisson equation with a banded linear
-solve, and integrates the concentration dynamics in time with BDF.
+An independent finite-difference method-of-lines solver with BDF time
+integration. It is used for validation and synthetic data generation.
 
-### Why use current instead of concentration?
+### What is actually measured?
 
-Concentration fields are useful for validation, but they are not a realistic
-primary observation for the inverse problem. Current is an electrode-level signal
-that can be measured in an electrochemical circuit.
+The realistic observable is current `I(t)`. In the synthetic benchmark, `Q(t)`
+is only used internally to compute the same current from the simulated PNP state.
 
-### Are we measuring `Q(t)` in reality?
+### Why can there be current with no ion flux through the boundary?
 
-No. In a real experiment the measured signal is current `I(t)`. In the synthetic
-benchmark, `Q(t)` is only a simulation-side construction used to compute the
-same charging-current observable from the PNP state.
+The boundary is blocking, so ions do not cross the electrode. The current here
+is electrode charging current, not boundary ionic flux.
 
-### Why is there current if the ion boundary flux is zero?
+### Why use a PINN if training is expensive?
 
-The boundary condition is a blocking-electrode condition. Ions do not cross the
-electrode, so ionic flux through the boundary is zero. But the electrode can
-still have charging current because charge redistributes and the electric field
-changes.
+Because the trained PINN can be reused for many forward evaluations. That is
+useful for posterior grids, MCMC, parameter sweeps, and repeated inverse
+experiments.
 
-### Is 2% Gaussian noise physically guaranteed?
+### Is the result final?
 
-No. It is a controlled synthetic noise model for this diagnostic. It is
-reasonable as a first test because it is simple and interpretable, but the next
-step should include sensitivity tests across different noise levels and possibly
-different noise models.
-
-### Is the inverse result already fully reliable?
-
-It is reliable as a controlled proof of concept. It shows that the pipeline is
-coherent and the posterior covers the true parameters for the tested case. It is
-not yet a final experimental inference model, because it still needs robustness
-tests across more true parameter pairs, noise levels, sampling choices, and
-physics assumptions.
-
-### Why use a PINN if training is slow?
-
-The advantage is amortization. The benchmark solver may be better for one or a
-small number of forward solves. The PINN becomes useful when many forward
-evaluations are needed, such as grid posterior evaluation, MCMC, design sweeps,
-or repeated inverse problems.
-
-### What does MAP mean here?
-
-MAP means maximum a posteriori estimate: the grid point with the highest
-posterior probability. It is a single representative point. It should be read
-together with the posterior mean and credible intervals, because the posterior
-contains uncertainty and parameter coupling.
-
-### What should be emphasized if time is short?
-
-Emphasize four points: the observable is current, the reference data are
-generated independently of the PINN, the likelihood is Gaussian on current
-measurements, and the output is a posterior over `Dp` and `Dn`, not only a
-single best-fit value.
+No. It is a controlled proof of concept. The next step is robustness testing
+across parameter pairs, noise levels, time sampling choices, and richer physics.
