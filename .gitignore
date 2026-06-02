@@ -8,6 +8,8 @@ __pycache__/
 *.log
 *.out
 *.toc
+outputs/
+presentation/artifact-build-manifest.json
 
 # Local-only reference material and old exploratory artifacts
 Gosselin-Waterloo-FENNM - Copy.pdf

@@ -17,6 +17,8 @@ for many fast likelihood evaluations over diffusion-parameter space.
 For a short high-level project update, see
 [progress/LATEST_PROGRESS.md](progress/LATEST_PROGRESS.md).
 
+Current presentation materials are in [presentation/](presentation/).
+
 ## Physical Model
 
 The active setup is a nondimensional binary-electrolyte PNP benchmark on
@@ -269,6 +271,10 @@ marginals.png
 |                   |-- current_fit.png
 |                   |-- posterior_contour.png
 |                   `-- marginals.png
+|-- presentation/
+|   |-- pnp_pinn_current_inference_presentation.pptx
+|   |-- transcript.md
+|   `-- README.md
 |-- docs/
 |   `-- reports/
 |       |-- pnp_pinn_project_technical_report.tex
@@ -278,8 +284,8 @@ marginals.png
 ```
 
 Only the compact current-run artifact subset is tracked. Local archives,
-checkpoint backups, presentation material, and unrelated generated outputs are
-excluded by `.gitignore`.
+checkpoint backups, temporary presentation workspaces, and unrelated generated
+outputs are excluded by `.gitignore`.
 
 ## Main Python Entry Points
 
