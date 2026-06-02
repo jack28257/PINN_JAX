@@ -12,13 +12,15 @@ Prepared talk length: approximately 13 minutes, followed by Q&A.
 
 ## Core Story
 
-This project builds a current-based Bayesian inverse inference pipeline for a
-one-dimensional Poisson-Nernst-Planck system. The unknowns are the diffusion
-parameters `Dp` and `Dn`. The observable is electrode charging current, not the
-hidden concentration or potential fields. A parametric physics-informed neural
-network is trained once as a reusable forward surrogate. The trained surrogate
-is then used to evaluate a Gaussian current likelihood over parameter space and
-form a posterior distribution for `Dp` and `Dn`.
+This presentation is titled "A Parameterized PINN Solution to the Poisson
+Nernst Planck Model." The project builds a current-based Bayesian inverse
+inference pipeline for a one-dimensional Poisson-Nernst-Planck system. The
+unknowns are the diffusion parameters `Dp` and `Dn`. The observable is electrode
+charging current, not the hidden concentration or potential fields. A
+parametric physics-informed neural network is trained once as a reusable
+forward surrogate. The trained surrogate is then used to evaluate a Gaussian
+current likelihood over parameter space and form a posterior distribution for
+`Dp` and `Dn`.
 
 The most important conceptual sentence:
 
@@ -49,8 +51,8 @@ The most important conceptual sentence:
 
 Script:
 
-Good morning. My talk is about current-based Bayesian inference for a
-one-dimensional Poisson-Nernst-Planck system.
+Good morning. My talk is titled "A Parameterized PINN Solution to the Poisson
+Nernst Planck Model."
 
 The project asks whether we can infer diffusion parameters from electrode
 current. The computational idea is to train a parametric physics-informed neural

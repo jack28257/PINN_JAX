@@ -3,6 +3,12 @@
 This folder contains the current academic presentation package for the 1D PNP
 PINN current-based inverse inference project.
 
+Presentation title:
+
+```text
+A Parameterized PINN Solution to the Poisson Nernst Planck Model
+```
+
 ## Files
 
 ```text
