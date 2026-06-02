@@ -6,13 +6,14 @@ PINN current-based inverse inference project.
 ## Files
 
 ```text
-pnp_pinn_current_inference_presentation.pptx  Editable PowerPoint deck
-transcript.md                                Slide-by-slide speaking notes
+pnp_pinn_ssc_2026_presentation.pdf   Final presentation PDF
+pnp_pinn_ssc_2026_presentation.pptx  Editable source deck
+transcript.md                         Slide-by-slide speaking notes
 ```
 
 ## Talk Length
 
-The deck has 14 slides and is designed for a 15-minute presentation slot. The
+The deck has 15 slides and is designed for a 15-minute presentation slot. The
 prepared talk is timed to approximately 13 minutes, followed by a final Q&A
 slide.
 
