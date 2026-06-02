@@ -6,91 +6,107 @@ Format: academic presentation
 
 Target slot: 15 minutes
 
-Prepared talk length: approximately 13 minutes
+Prepared talk length: approximately 13 minutes, plus the final Q&A slide
 
 ## Main Story
 
 This project studies a controlled inverse problem for a one-dimensional
-Poisson-Nernst-Planck system. The unknowns are the diffusion parameters `Dp` and
-`Dn`. The observation is electrode current, not the hidden concentration or
-potential fields. A PINN is trained as a parameterized forward surrogate, and the
-trained surrogate is then reused to evaluate a current-based likelihood and form
-a posterior distribution over `Dp` and `Dn`.
+Poisson-Nernst-Planck system. The unknown parameters are the two diffusion
+coefficients `Dp` and `Dn`. The observation is electrode current, not the hidden
+concentration or potential fields. A physics-informed neural network is trained
+as a parameterized forward surrogate. The trained surrogate is then reused to
+evaluate a current-based Gaussian likelihood and form a posterior distribution
+over `Dp` and `Dn`.
 
 The most important conceptual sentence:
 
 > The PINN is not directly estimating `Dp` and `Dn`; it learns the forward PNP
-> solution map for many possible `Dp`, `Dn` values, and the inverse problem uses
-> that map to compare predicted current with observed current.
+> solution map for many possible diffusion-parameter values, and the inverse
+> problem uses that map to compare predicted current with observed current.
 
 ## Timing Plan
 
 | Slide | Topic | Target time |
 | --- | --- | ---: |
-| 1 | Thesis and workflow | 0:45 |
-| 2 | What is observed | 0:55 |
-| 3 | Forward PNP model | 1:05 |
-| 4 | What the PINN learns | 1:10 |
-| 5 | PINN training objective | 1:00 |
-| 6 | Why amortization matters | 0:50 |
-| 7 | Synthetic data generation | 0:55 |
-| 8 | Current observable and Q(t) | 1:05 |
-| 9 | Likelihood and posterior | 1:10 |
-| 10 | Current fit | 1:05 |
-| 11 | Posterior result | 1:20 |
-| 12 | Interpretation and next steps | 1:20 |
+| 1 | Formal opening | 0:25 |
+| 2 | Research question and storyline | 0:45 |
+| 3 | What is observed | 0:55 |
+| 4 | Forward PNP model | 1:05 |
+| 5 | What the PINN learns | 1:05 |
+| 6 | PINN training objective | 1:00 |
+| 7 | Why amortization matters | 0:50 |
+| 8 | Synthetic data generation | 0:55 |
+| 9 | Current observable and Q(t) | 1:05 |
+| 10 | Likelihood and posterior | 1:10 |
+| 11 | Current fit | 1:00 |
+| 12 | Posterior result | 1:20 |
+| 13 | Interpretation and next steps | 1:15 |
+| 14 | Any questions | hold |
 
 Total prepared talk: about 13 minutes.
 
-## Slide 1 - Thesis and Workflow
+## Slide 1 - Formal Opening
 
-Timing: 0:00 to 0:45
-
-Script:
-
-This talk is about current-based inverse inference for a one-dimensional
-Poisson-Nernst-Planck system.
-
-The goal is to infer the diffusion parameters `Dp` and `Dn` from electrode
-current observations. The central idea is to first train a physics-informed
-neural network as a parameterized forward surrogate. Once trained, this PINN can
-be queried at many candidate parameter pairs. Those forward predictions are then
-used inside a Bayesian inverse problem.
-
-So the workflow is: PNP physics gives the forward model, the PINN approximates
-the parameterized forward solution, and the inverse problem produces a posterior
-distribution over `Dp` and `Dn`.
-
-Transition:
-
-I will start with the observation model, because that determines what inverse
-problem we are actually solving.
-
-## Slide 2 - What Is Observed
-
-Timing: 0:45 to 1:40
+Timing: 0:00 to 0:25
 
 Script:
 
-The inverse problem should be formulated in terms of a quantity that could be
-measured.
+Good morning. Today I will present a current-based inverse inference pipeline
+for a one-dimensional Poisson-Nernst-Planck system.
 
-During model development, it is useful to inspect the full fields:
-`cp(x,t)`, `cn(x,t)`, and `phi(x,t)`. But those fields are not the observation
-model used for inference here. The inverse problem uses electrode current
-`I(t)`.
-
-Mathematically, the data are current observations, and the output is a posterior
-distribution `p(Dp, Dn | I_obs)`. This distinction matters because the PINN
-outputs fields, but the likelihood is built from current.
+The goal is to infer diffusion parameters from electrode current. The method
+uses a physics-informed neural network as a reusable forward surrogate, and then
+uses that surrogate inside a Bayesian inverse problem.
 
 Transition:
 
-Next I will define the forward PNP system that generates these fields.
+I will first state the central question and the structure of the talk.
 
-## Slide 3 - Forward PNP Model
+## Slide 2 - Research Question and Storyline
 
-Timing: 1:40 to 2:45
+Timing: 0:25 to 1:10
+
+Script:
+
+The central question is whether electrode current can identify the diffusion
+parameters `Dp` and `Dn`.
+
+The storyline is four steps. First, define the measurable signal: current.
+Second, define the forward PNP physics. Third, train a PINN to approximate the
+forward map over the parameter space. Finally, use the trained forward model to
+build a posterior distribution over the unknown parameters.
+
+This is important because the inverse problem should be posed around something
+that would be observable in an experiment, not around hidden simulation fields.
+
+Transition:
+
+So I will start with the observation model.
+
+## Slide 3 - What Is Observed
+
+Timing: 1:10 to 2:05
+
+Script:
+
+During development, it is useful to inspect the full fields:
+`cp(x,t)`, `cn(x,t)`, and `phi(x,t)`. But those are hidden state variables.
+They are not the measurement model used for inference here.
+
+The inverse problem uses electrode current `I(t)`. The data are noisy current
+observations, and the output is a posterior distribution over `Dp` and `Dn`
+conditioned on those observations.
+
+This distinction matters because the PINN predicts fields, but the likelihood
+is built from current. The field prediction is only an intermediate object.
+
+Transition:
+
+Next I will define the forward PNP system that produces these fields.
+
+## Slide 4 - Forward PNP Model
+
+Timing: 2:05 to 3:10
 
 Script:
 
@@ -100,7 +116,7 @@ There are two ionic concentrations, `cp` and `cn`, and an electric potential
 
 The fluxes contain diffusion and drift terms. The concentration equations are
 conservation laws, and the potential satisfies the Poisson equation. The
-parameter values to infer are the two diffusion coefficients `Dp` and `Dn`.
+unknown parameters are the two diffusion coefficients `Dp` and `Dn`.
 
 The active setup uses `x` in `[0,1]`, `t` in `[0,0.2]`, and `Dp`, `Dn` in
 `[0.5,2.0]`. The wall potentials are fixed, and the ion fluxes at the walls are
@@ -108,89 +124,84 @@ zero.
 
 The no-flux condition is a blocking-electrode assumption. It means ions do not
 cross the electrode. It does not mean the measured current is zero, because the
-current here is charging current associated with the electrode and electric
-field.
+current considered here is charging current associated with the electrode and
+electric field.
 
 Transition:
 
 With the forward model fixed, the next question is what the PINN actually
 learns.
 
-## Slide 4 - What the PINN Learns
+## Slide 5 - What the PINN Learns
 
-Timing: 2:45 to 3:55
+Timing: 3:10 to 4:15
 
 Script:
 
-This is the most important slide for understanding the role of the PINN.
+This is the key conceptual slide for the PINN.
 
 The PINN is not trained to directly output `Dp` and `Dn`. Instead, it learns a
-parameterized forward solution map. Its input is `(x, t, Dp, Dn)`, and its output
-is `(cp, cn, phi)`.
+parameterized forward solution map. Its input is `(x, t, Dp, Dn)`, and its
+output is `(cp, cn, phi)`.
 
 This means one trained neural network represents a family of PNP solutions over
-the parameter domain. If we give the network a candidate pair of diffusion
-parameters, it returns the predicted concentration and potential fields at the
-requested space-time point.
+the parameter domain. If we give the network a candidate diffusion-parameter
+pair, it returns the predicted state at the requested space-time point.
 
 The inverse problem then uses those predicted fields to compute the predicted
-current for that candidate parameter pair. That is how the PINN enters the
-posterior calculation.
+current for that candidate parameter pair.
 
 Transition:
 
 Now I will explain how this forward surrogate is trained.
 
-## Slide 5 - PINN Training Objective
+## Slide 6 - PINN Training Objective
 
-Timing: 3:55 to 4:55
+Timing: 4:15 to 5:15
 
 Script:
 
 The PINN is trained by enforcing the physics of the PNP system, rather than by
 supervised fitting to reference solution labels.
 
-The loss contains the PDE residuals, the initial and boundary residuals, and
-sampling over the parameter domain. In the current completed run, the model was
-trained for 500,000 Adam steps.
+The loss has three roles. The PDE residual term enforces the differential
+equations. The initial and boundary terms enforce the physical constraints. The
+parameter-domain sampling term ensures that the network is trained across
+candidate values of `Dp` and `Dn`, not only at one parameter pair.
 
-Two constraints are especially important. The initial concentrations and the
-wall voltages are built into the network output, so those conditions are
-enforced structurally.
-
+In the current completed run, the model was trained for 500,000 Adam steps.
 Reference solutions are still important, but their role is different: they are
-used for validation and for generating synthetic data, not as direct training
-labels for the PINN.
+used for validation and synthetic observations, not as pointwise PINN training
+labels.
 
 Transition:
 
 This leads to the computational reason for using a PINN.
 
-## Slide 6 - Why Amortization Matters
+## Slide 7 - Why Amortization Matters
 
-Timing: 4:55 to 5:45
+Timing: 5:15 to 6:05
 
 Script:
 
 The claim is not that training a PINN is faster than one benchmark solve.
 Training is expensive.
 
-The computational argument is amortization. If we solve the inverse problem
+The computational argument is amortization. If the inverse problem is solved
 directly with the benchmark model, then each candidate `Dp`, `Dn` pair requires
-a forward numerical solve. A grid posterior or an MCMC chain may require many
-such evaluations.
+a forward numerical PDE solve. A posterior grid or an MCMC chain may require
+many such evaluations.
 
-After the PINN has been trained, the forward model is a neural-network
-evaluation. The benefit appears when the same trained model is reused many
-times.
+After the PINN is trained, the forward model is a neural-network evaluation.
+The benefit appears when the same trained surrogate is reused many times.
 
 Transition:
 
-Now I will show how the current observations are generated.
+Now I will show how the synthetic current observations are generated.
 
-## Slide 7 - Synthetic Data Generation
+## Slide 8 - Synthetic Data Generation
 
-Timing: 5:45 to 6:40
+Timing: 6:05 to 7:00
 
 Script:
 
@@ -210,12 +221,12 @@ surrogate.
 
 Transition:
 
-Before forming the likelihood, I need to clarify exactly what current means in
-this blocking-electrode setup.
+Before forming the likelihood, I need to clarify how current is computed in the
+blocking-electrode setup.
 
-## Slide 8 - Current Observable and Q(t)
+## Slide 9 - Current Observable and Q(t)
 
-Timing: 6:40 to 7:45
+Timing: 7:00 to 8:05
 
 Script:
 
@@ -230,32 +241,32 @@ The important point is that `Q(t)` is not being presented as the measured lab
 quantity. It is the simulation-side construction used to compute the same
 current observable from the PNP state.
 
-This is useful because it avoids unstable boundary derivatives when evaluating
-current from the PINN state. It also respects the blocking boundary condition:
-the current is not boundary ionic flux.
+This route also avoids unstable boundary derivatives when evaluating current
+from the learned PINN field. It respects the blocking boundary condition,
+because the current here is not boundary ionic flux.
 
 Transition:
 
 The next slide shows the likelihood model used to turn those current
 observations into a posterior.
 
-## Slide 9 - Likelihood and Posterior
+## Slide 10 - Likelihood and Posterior
 
-Timing: 7:45 to 8:55
+Timing: 8:05 to 9:15
 
 Script:
 
-For each candidate pair `Dp`, `Dn`, the PINN predicts a current time series. We
-compare that prediction to the observed current.
+For each candidate pair `Dp`, `Dn`, the PINN predicts a current time series.
+We compare that prediction to the observed current.
 
-The noise model is independent Gaussian noise. The residual `r_k` is the
-difference between the PINN-predicted current and the observed current,
-normalized by the noise standard deviation.
+The noise model is independent Gaussian noise. The residual is the difference
+between the PINN-predicted current and the observed current, normalized by the
+noise standard deviation.
 
-The likelihood is therefore proportional to `exp(-0.5 sum r_k^2)`. In this
-diagnostic, the prior is uniform over a 41 by 41 parameter grid, so the
-posterior is obtained by evaluating and normalizing this likelihood over the
-grid.
+The likelihood is therefore proportional to the exponential of minus one half
+times the sum of squared standardized residuals. In this diagnostic, the prior
+is uniform over a 41 by 41 parameter grid, so the posterior is obtained by
+evaluating and normalizing this likelihood over the grid.
 
 The output is a distribution over `Dp` and `Dn`, not just a single fitted
 parameter pair.
@@ -264,29 +275,29 @@ Transition:
 
 The first result is the current fit at the MAP point.
 
-## Slide 10 - Current Fit
+## Slide 11 - Current Fit
 
-Timing: 8:55 to 10:00
+Timing: 9:15 to 10:15
 
 Script:
 
-This plot compares three curves: the reference clean current, the noisy current
-observations, and the PINN-predicted current at the MAP parameter pair.
+This plot compares three signals: the reference clean current, the noisy
+current observations, and the PINN-predicted current at the MAP parameter pair.
 
 The MAP estimate is `Dp = 1.25`, `Dn = 1.2125`. The PINN current at this point
 matches the observed current at approximately the noise level.
 
-This is an important check because the inverse problem is not being evaluated on
-hidden concentration fields. It is being evaluated on the same current signal
-that appears in the likelihood.
+This is an important check because the inverse problem is not evaluated on
+hidden concentration fields. It is evaluated on the same current signal that
+appears in the likelihood.
 
 Transition:
 
-The current fit is useful, but the posterior is the main result.
+The current fit is useful, but the posterior is the main inverse result.
 
-## Slide 11 - Posterior Result
+## Slide 12 - Posterior Result
 
-Timing: 10:00 to 11:20
+Timing: 10:15 to 11:35
 
 Script:
 
@@ -297,21 +308,21 @@ The posterior is concentrated near the true parameter values. The true pair is
 The 95% marginal interval for `Dp` is `[1.0625, 1.4000]`, and for `Dn` it is
 `[1.0625, 1.4375]`. Both intervals include the true values.
 
-The shape of the posterior is also informative. It is not a circular independent
-uncertainty region. It is tilted, which means the current signal couples the two
-diffusion parameters. Several nearby combinations of `Dp` and `Dn` can explain
-the current almost equally well.
+The shape of the posterior is also informative. It is not a circular
+independent uncertainty region. It is tilted, which means the current signal
+couples the two diffusion parameters. Several nearby combinations of `Dp` and
+`Dn` can explain the current almost equally well.
 
-So the result should be interpreted as a posterior uncertainty region, not as an
+So the result should be interpreted as a posterior uncertainty region, not as
 exact deterministic recovery.
 
 Transition:
 
 I will close with what this result shows and what still needs to be tested.
 
-## Slide 12 - Interpretation and Next Steps
+## Slide 13 - Interpretation and Next Steps
 
-Timing: 11:20 to 12:40
+Timing: 11:35 to 12:50
 
 Script:
 
@@ -331,6 +342,18 @@ The main conclusion is that the pipeline is now coherent: measurable current
 data, an independent reference data source, a trained PINN forward surrogate,
 and a posterior answer to the inverse problem.
 
+Transition:
+
+Thank you.
+
+## Slide 14 - Any Questions
+
+Timing: hold for Q&A
+
+Script:
+
+Any questions?
+
 ## Short Q&A Prep
 
 ### What is the PINN doing?
@@ -347,7 +370,8 @@ integration. It is used for validation and synthetic data generation.
 ### What is actually measured?
 
 The realistic observable is current `I(t)`. In the synthetic benchmark, `Q(t)`
-is only used internally to compute the same current from the simulated PNP state.
+is only used internally to compute the same current from the simulated PNP
+state.
 
 ### Why can there be current with no ion flux through the boundary?
 

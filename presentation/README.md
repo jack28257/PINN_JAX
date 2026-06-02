@@ -12,9 +12,9 @@ transcript.md                                Slide-by-slide speaking notes
 
 ## Talk Length
 
-The deck has 12 slides and is designed for a 15-minute presentation slot. The
-prepared talk is timed to approximately 13 minutes so there is room for
-questions.
+The deck has 14 slides and is designed for a 15-minute presentation slot. The
+prepared talk is timed to approximately 13 minutes, followed by a final Q&A
+slide.
 
 ## Main Thesis
 
